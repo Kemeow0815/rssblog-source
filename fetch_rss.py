@@ -30,20 +30,46 @@ rss_fetch_date_dir = "./__tmp__/date/"
 
 def fetch():
     global rss
-    for key, link in fetch_list.items():
+    for key, value in fetch_list.items():
         rss_list = []
-        try:
-            rss_list = json.loads(requests.get(link, verify=False).text)
-            for r in rss_list:
-                r = r.strip("/")
-                print(r)
-        except:
-            pass
-        rss = rss + rss_list
-        rss_user[key] = rss_list
+        
+        # 支持两种格式：
+        # 1. 值是 URL 字符串（原作者格式）：{ "user": "https://.../list.json" }
+        # 2. 值是 RSS 列表（你的格式）：{ "user": ["rss1", "rss2"] }
+        
+        if isinstance(value, str):
+            # 格式1：值是 URL，需要请求获取 RSS 列表
+            try:
+                print(f"Fetching RSS list from URL: {value}")
+                rss_list = json.loads(requests.get(value, verify=False, timeout=10).text)
+                print(f"Got {len(rss_list)} RSS sources from {key}")
+            except Exception as e:
+                print(f"Error fetching RSS list from {value}: {e}")
+                continue
+        elif isinstance(value, list):
+            # 格式2：值直接是 RSS 列表
+            rss_list = value
+            print(f"Got {len(rss_list)} RSS sources directly from {key}")
+        else:
+            print(f"Warning: Unsupported format for {key}: {type(value)}")
+            continue
+        
+        # 清理 RSS URL
+        cleaned_rss_list = []
+        for r in rss_list:
+            if isinstance(r, str):
+                cleaned_rss_list.append(r.strip("/"))
+                print(f"  - {r.strip('/')}")
+            else:
+                print(f"Warning: Invalid RSS URL in {key}: {r}")
+        
+        rss = rss + cleaned_rss_list
+        rss_user[key] = cleaned_rss_list
 
     # 所有源根据url去重
     rss = list({r: r for r in rss}.values())
+    print(f"\nTotal unique RSS sources: {len(rss)}")
+    
     # 个人源不去重, 依赖于个人维护
     # for test
     # rss = ["https://xxxx/feed/",]
