@@ -1,6 +1,6 @@
 ## RSSBlog-Source
 
-本仓库作为[RSSBlog](https://github.com/caibingcheng/rssblog)的资源仓库, 负责rss数据的拉取与整理. 本站实例[rssblog.cn](https://rssblog.cn/).
+本仓库作为[RSSBlog](https://github.com/Kemeow0815/rssblog)的资源仓库, 负责rss数据的拉取与整理. 本站实例[rssblog.268682.xyz](https://rssblog.268682.xyz/).
 
 ## USAGE
 ```
