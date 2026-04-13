@@ -107,8 +107,16 @@ def combine_source(rss_fetch_all_dir, rss_fetch_source_dir):
             dfs.append(df)
         except:
             print("combining skip", file)
-    df = pandas.concat(dfs)
-    df = df.sort_values("timestamp", ascending=False)
+    
+    # 处理空数据的情况
+    if not dfs:
+        print("No data to concatenate, creating empty file")
+        # 创建空DataFrame
+        df = pandas.DataFrame(columns=["title", "author", "link", "home", "rss", "date", "timestamp"])
+    else:
+        df = pandas.concat(dfs)
+        df = df.sort_values("timestamp", ascending=False)
+    
     df.to_csv(rss_fetch_all_dir + "new.csv", index=False, sep=",", encoding="utf-8")
     print("combin all page done")
 
@@ -118,10 +126,19 @@ def combine_member(rss_fetch_member_dir, rss_fetch_all_dir):
     print("combin member rss ...")
     if not os.path.isdir(rss_fetch_member_dir):
         os.makedirs(rss_fetch_member_dir)
-    df = pandas.read_csv(rss_fetch_all_dir + "/new.csv", encoding="utf-8")
-    df = df.sort_values(by="author", kind="mergesort")  # 保留前后顺序
-    df = df.drop_duplicates(subset=["author"], keep="first")
-    df = df.sort_values(by="timestamp", ascending=False)
+    
+    try:
+        df = pandas.read_csv(rss_fetch_all_dir + "/new.csv", encoding="utf-8")
+        if len(df) > 0:
+            df = df.sort_values(by="author", kind="mergesort")  # 保留前后顺序
+            df = df.drop_duplicates(subset=["author"], keep="first")
+            df = df.sort_values(by="timestamp", ascending=False)
+        else:
+            print("No data to process for member")
+    except Exception as e:
+        print("Error reading all/new.csv:", e)
+        df = pandas.DataFrame(columns=["title", "author", "link", "home", "rss", "date", "timestamp"])
+    
     df.to_csv(rss_fetch_member_dir + "new.csv", index=False, sep=",", encoding="utf-8")
     print("combin member rss done")
 
@@ -131,7 +148,16 @@ def split_date(rss_fetch_date_dir, rss_fetch_all_dir):
     print("split date page ...")
     if not os.path.isdir(rss_fetch_date_dir):
         os.makedirs(rss_fetch_date_dir)
-    df = pandas.read_csv(rss_fetch_all_dir + "/new.csv", encoding="utf-8")
+    
+    try:
+        df = pandas.read_csv(rss_fetch_all_dir + "/new.csv", encoding="utf-8")
+        if len(df) == 0:
+            print("No data to split by date")
+            return
+    except Exception as e:
+        print("Error reading all/new.csv:", e)
+        return
+    
     dfd = {}
     for i, d in df.iterrows():
         # Validate date format before slicing
@@ -181,8 +207,15 @@ def split_user(rss_fetch_user_dir, rss_user, rss_fetch_source_dir):
                 dfs.append(ldf)
             except:
                 print("combin user skip", url_hash)
-        df = pandas.concat(dfs)
-        df = df.sort_values("timestamp", ascending=False)
+        
+        # 处理空数据的情况
+        if not dfs:
+            print(f"No data for user {user}, creating empty file")
+            df = pandas.DataFrame(columns=["title", "author", "link", "home", "rss", "date", "timestamp"])
+        else:
+            df = pandas.concat(dfs)
+            df = df.sort_values("timestamp", ascending=False)
+        
         rss_dir = rss_fetch_user_dir + user + "/all/"
         if not os.path.isdir(rss_dir):
             os.makedirs(rss_dir)

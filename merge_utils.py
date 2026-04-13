@@ -16,6 +16,11 @@ URL = {}
 
 
 def cut(out, df, batch):
+    # 处理空数据的情况
+    if isinstance(df, list) or len(df) == 0:
+        print(f"No data to cut for {out}")
+        return 0
+        
     size = len(df)
     starts = [s for s in range(0, size, batch)]
     for idx, start in enumerate(starts):
@@ -32,8 +37,12 @@ def merge(out, fetch, duplicate_set=set()):
     dfs = []
     # fetch可能拿不到数据，但是也会创建对应的目录，所以需要判断是否存在
     if os.path.exists(fetch + "new.csv"):
-        df = pandas.read_csv(fetch + "new.csv", encoding="utf-8")
-        dfs.append(df)
+        try:
+            df = pandas.read_csv(fetch + "new.csv", encoding="utf-8")
+            if len(df) > 0:
+                dfs.append(df)
+        except Exception as e:
+            print(f"Error reading {fetch}new.csv: {e}")
 
     # 读取所有的csv文件，合并到一起
     # 分页后，导致每个文件都会变
@@ -44,8 +53,12 @@ def merge(out, fetch, duplicate_set=set()):
         idx += 1
         if not os.path.isfile(batch_file):
             break
-        df_batch = pandas.read_csv(batch_file, encoding="utf-8")
-        dfs.append(df_batch)
+        try:
+            df_batch = pandas.read_csv(batch_file, encoding="utf-8")
+            if len(df_batch) > 0:
+                dfs.append(df_batch)
+        except Exception as e:
+            print(f"Error reading {batch_file}: {e}")
     # 如果项目大了，这里可以优化，分批次合并，没准要几百万条数据呢
 
     df = []
@@ -67,34 +80,45 @@ def merge(out, fetch, duplicate_set=set()):
 
 def generator_rss(rss_out, rss_in):
     batch_file = rss_in + "1.csv"
-    df = pandas.read_csv(batch_file, encoding="utf-8")
-    df_dict = json.loads(df.to_json(orient="records"))
+    if not os.path.exists(batch_file):
+        print(f"No data file found at {batch_file}, skipping RSS generation")
+        return
+        
+    try:
+        df = pandas.read_csv(batch_file, encoding="utf-8")
+        if len(df) == 0:
+            print(f"No data in {batch_file}, skipping RSS generation")
+            return
+            
+        df_dict = json.loads(df.to_json(orient="records"))
 
-    def rss_not_empty(r):
-        return (
-            {"title", "link", "author", "timestamp"}.issubset(r.keys())
-            and "" not in {r["title"], r["link"], r["author"], r["timestamp"]}
-            and None not in {r["title"], r["link"], r["author"], r["timestamp"]}
-        )
-
-    rss = PyRSS2Gen.RSS2(
-        title="RSSBlog",
-        link="https://rssblog.cn/",
-        description="A Site for Blog RSS.",
-        lastBuildDate=datetime.datetime.now(),
-        items=[
-            PyRSS2Gen.RSSItem(
-                title=r["title"],
-                link=r["link"],
-                author=r["author"],
-                pubDate=datetime.datetime.fromtimestamp(r["timestamp"]),
+        def rss_not_empty(r):
+            return (
+                {"title", "link", "author", "timestamp"}.issubset(r.keys())
+                and "" not in {r["title"], r["link"], r["author"], r["timestamp"]}
+                and None not in {r["title"], r["link"], r["author"], r["timestamp"]}
             )
-            for r in df_dict
-            if rss_not_empty(r)
-        ],
-    )
-    with open(rss_out + "rss.xml", "wb") as f:
-        rss.write_xml(f, encoding="utf-8")
+
+        rss = PyRSS2Gen.RSS2(
+            title="RSSBlog",
+            link="https://rssblog.cn/",
+            description="A Site for Blog RSS.",
+            lastBuildDate=datetime.datetime.now(),
+            items=[
+                PyRSS2Gen.RSSItem(
+                    title=r["title"],
+                    link=r["link"],
+                    author=r["author"],
+                    pubDate=datetime.datetime.fromtimestamp(r["timestamp"]),
+                )
+                for r in df_dict
+                if rss_not_empty(r)
+            ],
+        )
+        with open(rss_out + "rss.xml", "wb") as f:
+            rss.write_xml(f, encoding="utf-8")
+    except Exception as e:
+        print(f"Error generating RSS: {e}")
 
 
 def merge_source(rss_out_source_dir, rss_fetch_source_dir, url=URL):
@@ -103,7 +127,19 @@ def merge_source(rss_out_source_dir, rss_fetch_source_dir, url=URL):
     url["source"] = []
     if not os.path.isdir(rss_out_source_dir):
         os.makedirs(rss_out_source_dir)
-    fetch_source_dirs = os.listdir(rss_fetch_source_dir)
+    
+    if not os.path.isdir(rss_fetch_source_dir):
+        print(f"Source directory {rss_fetch_source_dir} does not exist, skipping")
+        print("merge source done")
+        return
+        
+    try:
+        fetch_source_dirs = os.listdir(rss_fetch_source_dir)
+    except Exception as e:
+        print(f"Error reading source directory: {e}")
+        print("merge source done")
+        return
+        
     for source_dir in fetch_source_dirs:
         fetch = rss_fetch_source_dir + source_dir + "/"
         out = rss_out_source_dir + source_dir + "/"
@@ -149,7 +185,19 @@ def merge_date(rss_out_date_dir, rss_fetch_date_dir, url=URL):
     url["date"] = []
     if not os.path.isdir(rss_out_date_dir):
         os.makedirs(rss_out_date_dir)
-    fetch_date_dirs = os.listdir(rss_fetch_date_dir)
+    
+    if not os.path.isdir(rss_fetch_date_dir):
+        print(f"Date directory {rss_fetch_date_dir} does not exist, skipping")
+        print("merge date done")
+        return
+        
+    try:
+        fetch_date_dirs = os.listdir(rss_fetch_date_dir)
+    except Exception as e:
+        print(f"Error reading date directory: {e}")
+        print("merge date done")
+        return
+        
     date = {}
     for date_dir in fetch_date_dirs:
         fetch = rss_fetch_date_dir + date_dir + "/"
@@ -194,7 +242,19 @@ def merge_user(rss_out_user_dir, rss_fetch_user_dir):
     URL["user"] = []
     if not os.path.isdir(rss_out_user_dir):
         os.makedirs(rss_out_user_dir)
-    fetch_user_dirs = os.listdir(rss_fetch_user_dir)
+    
+    if not os.path.isdir(rss_fetch_user_dir):
+        print(f"User directory {rss_fetch_user_dir} does not exist, skipping")
+        print("merge user done")
+        return
+        
+    try:
+        fetch_user_dirs = os.listdir(rss_fetch_user_dir)
+    except Exception as e:
+        print(f"Error reading user directory: {e}")
+        print("merge user done")
+        return
+        
     user_partion = {("all", merge_all), ("date", merge_date), ("member", merge_member)}
     for user_dir in fetch_user_dirs:
         fetch = rss_fetch_user_dir + user_dir + "/"
