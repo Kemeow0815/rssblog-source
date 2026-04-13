@@ -25,26 +25,9 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
           ref: dev
-      - name: Pull public
-        uses: actions/checkout@v2
-        if: ${{ github.ref == 'refs/heads/master' }}
-        with:
-          persist-credentials: false
-          fetch-depth: 1
-          ref: public
-          path: ./public
-      - name: Pull public dev
-        uses: actions/checkout@v2
-        if: ${{ github.ref == 'refs/heads/dev' }}
-        with:
-          persist-credentials: false
-          fetch-depth: 1
-          ref: public-dev
-          path: ./public
-      - name: Check source
-        shell: bash
+      - name: Create public directory
         run: |
-          rm -fr ./public/.git
+          mkdir -p ./public
           ls -lh ./
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -67,20 +50,29 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Pull public
+      - name: Checkout repository
         uses: actions/checkout@v2
-        if: ${{ github.ref == 'refs/heads/master' }}
         with:
-          persist-credentials: false
+          persist-credentials: true
           fetch-depth: 1
-          ref: public
-      - name: Pull public dev
-        uses: actions/checkout@v2
-        if: ${{ github.ref == 'refs/heads/dev' }}
-        with:
-          persist-credentials: false
-          fetch-depth: 1
-          ref: public-dev
+          ref: master
+      - name: Create or switch to public branch
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          # Check if public branch exists
+          if git ls-remote --exit-code --heads origin public; then
+            echo "Public branch exists, checking out..."
+            git fetch origin public:public
+            git checkout public
+          else
+            echo "Creating new public branch..."
+            git checkout --orphan public
+            git rm -rf .
+            echo "# RSSBlog Data Branch" > README.md
+            git add README.md
+            git commit -m "Initial public branch"
+          fi
       - name: Clean public
         run: |
           rm -fr ./*
