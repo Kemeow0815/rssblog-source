@@ -122,7 +122,6 @@
     "user": [
       {
         "user": "default",
-        "all": 4,
         "date": [
           [
             "2025",
@@ -225,7 +224,8 @@
             ]
           ]
         ],
-        "member": 1
+        "member": 1,
+        "all": 4
       }
     ]
   }
