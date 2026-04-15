@@ -1,12 +1,10 @@
 title,author,link,home,rss,date,timestamp
-如何将 FinalcutPro的fcpxml文件转换为srt字幕？导出srt字幕方法,张洪Heo,https://blog.zhheo.com/p/obo78geq.html,https://blog.zhheo.com/,https://blog.zhheo.com/rss.xml,2026-01-22,1769055557.0
 WTF？！直接将Umami部署到EdgeOne Pages？扔掉VPS！直接跑在云函数！,《二叉树树》官方网站,https://2x.nz/posts/eo-umami/,https://2x.nz/,https://2x.nz/rss.xml,2026-01-19,1768788872.0
 静态网站也需要WAF？Cloudflare不需要但是EdgeOne/ESA需要！,《二叉树树》官方网站,https://2x.nz/posts/waf/,https://2x.nz/,https://2x.nz/rss.xml,2026-01-17,1768665600.0
 什么？4元每月200G的服务器？还是阿里的？还有联通9929精品回程？？,《二叉树树》官方网站,https://2x.nz/posts/aliyun-ecs-4rm/,https://2x.nz/,https://2x.nz/rss.xml,2026-01-16,1768579180.0
 EO VS ESA，谁才是国内CDNの王？！,《二叉树树》官方网站,https://2x.nz/posts/eovsesa/,https://2x.nz/,https://2x.nz/rss.xml,2026-01-16,1768553588.0
 完全免费！搭建一个自己的短链服务！,《二叉树树》官方网站,https://2x.nz/posts/static-redirect-group/,https://2x.nz/,https://2x.nz/rss.xml,2026-01-14,1768405171.0
 如何免水印下载豆包生成的图片？豆包AI图去水印，无水印下载,张洪Heo,https://blog.zhheo.com/p/tw9uwtki.html,https://blog.zhheo.com/,https://blog.zhheo.com/rss.xml,2026-01-14,1768368702.0
-Mac中罗技鼠标键盘近期失灵问题解决方法，Logi Options 打不开,张洪Heo,https://blog.zhheo.com/p/9jbu7q9r.html,https://blog.zhheo.com/,https://blog.zhheo.com/rss.xml,2026-01-12,1768203744.0
 网站分流怎么做？全球秒开！有点坐牢，但是好玩！,《二叉树树》官方网站,https://2x.nz/posts/fenliu/,https://2x.nz/,https://2x.nz/rss.xml,2026-01-11,1768154945.0
 试试Cloudflare IP优选！让Cloudflare在国内再也不是减速器！,《二叉树树》官方网站,https://2x.nz/posts/cf-fastip/,https://2x.nz/,https://2x.nz/rss.xml,2026-01-10,1768060800.0
 你有一个全球网站？如何做好监控？,《二叉树树》官方网站,https://2x.nz/posts/double-monitior/,https://2x.nz/,https://2x.nz/rss.xml,2026-01-09,1767929162.0
@@ -49,3 +47,5 @@ GoEdge自建CDN系统踩坑记录,《二叉树树》官方网站,https://2x.nz/p
 Reality协议的代理服务端搭建教程,《二叉树树》官方网站,https://2x.nz/posts/reality/,https://2x.nz/,https://2x.nz/rss.xml,2025-09-08,1757347200.0
 Oracle（甲骨文云）踩坑记录,《二叉树树》官方网站,https://2x.nz/posts/oci/,https://2x.nz/,https://2x.nz/rss.xml,2025-09-07,1757260885.0
 公开架构，我的二次元随机图API是怎么做的,《二叉树树》官方网站,https://2x.nz/posts/acg-randompic-api/,https://2x.nz/,https://2x.nz/rss.xml,2025-09-05,1757096520.0
+记录一下批量重命名插件咋写的,《二叉树树》官方网站,https://2x.nz/posts/rename/,https://2x.nz/,https://2x.nz/rss.xml,2025-09-05,1757095166.0
+UptimeRobot，无需自托管的服务监控！,《二叉树树》官方网站,https://2x.nz/posts/uptimerobot/,https://2x.nz/,https://2x.nz/rss.xml,2025-09-03,1756929836.0
