@@ -122,6 +122,7 @@
     "user": [
       {
         "user": "default",
+        "member": 1,
         "all": 4,
         "date": [
           [
@@ -224,8 +225,7 @@
               ]
             ]
           ]
-        ],
-        "member": 1
+        ]
       }
     ]
   }
