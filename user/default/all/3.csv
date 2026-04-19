@@ -1,4 +1,5 @@
 title,author,link,home,rss,date,timestamp
+记录一下批量重命名插件咋写的,《二叉树树》官方网站,https://2x.nz/posts/rename/,https://2x.nz/,https://2x.nz/rss.xml,2025-09-05,1757095166.0
 UptimeRobot，无需自托管的服务监控！,《二叉树树》官方网站,https://2x.nz/posts/uptimerobot/,https://2x.nz/,https://2x.nz/rss.xml,2025-09-03,1756929836.0
 想玩k3s？Zeabur来帮你！,《二叉树树》官方网站,https://2x.nz/posts/zeabur/,https://2x.nz/,https://2x.nz/rss.xml,2025-09-02,1756853356.0
 哪吒监控搭建教程,《二叉树树》官方网站,https://2x.nz/posts/nezha/,https://2x.nz/,https://2x.nz/rss.xml,2025-09-02,1756846705.0
@@ -48,4 +49,3 @@ EdgeOne + Cloudflare，我们天下无敌！,《二叉树树》官方网站,http
 关于我折腾了一晚上 EdgeOne,《二叉树树》官方网站,https://2x.nz/posts/edgeone/,https://2x.nz/,https://2x.nz/rss.xml,2025-06-21,1750521600.0
 腾讯EdgeOne免费国内CDN,LiuShen's Blog,https://blog.liushen.fun/posts/68b52a49/,https://blog.liushen.fun/,https://blog.liushen.fun/atom.xml,2025-06-21,1750482720.0
 静态博客也想展示文章浏览量？当然可以！,《二叉树树》官方网站,https://2x.nz/posts/static-view/,https://2x.nz/,https://2x.nz/rss.xml,2025-06-17,1750176000.0
-AI写不出优质的代码？其实是你引导错了！,《二叉树树》官方网站,https://2x.nz/posts/aicode-prompt/,https://2x.nz/,https://2x.nz/rss.xml,2025-06-16,1750089600.0
