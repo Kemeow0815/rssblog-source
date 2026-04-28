@@ -10,7 +10,6 @@ from fetch_utils import *
 
 requests.packages.urllib3.disable_warnings()
 fetch_list_source = "https://gist.githubusercontent.com/Kemeow0815/5f4b704a940c409718cf65b3b5f10102/raw/addition.json"
-fetch_list = json.loads(requests.get(fetch_list_source, verify=False).text)
 
 # 所有的rss源
 rss = []
@@ -30,6 +29,15 @@ rss_fetch_date_dir = "./__tmp__/date/"
 
 def fetch():
     global rss
+    
+    # 每次运行时重新获取 Gist 数据
+    print(f"Fetching RSS list from: {fetch_list_source}")
+    try:
+        fetch_list = json.loads(requests.get(fetch_list_source, verify=False, timeout=10).text)
+        print(f"Successfully fetched RSS list")
+    except Exception as e:
+        print(f"Error fetching RSS list: {e}")
+        return
     
     # 支持三种格式：
     # 1. 直接是 RSS 列表（最新格式）：["rss1", "rss2"]
